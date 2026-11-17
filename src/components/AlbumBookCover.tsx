@@ -22,8 +22,8 @@ export const AlbumBookCover: React.FC<AlbumBookCoverProps> = ({
   const bevelOffset = spineW + grooveW;
 
   // ponytail: optimize Cloudinary cover image to responsive 800px display width for instant page load
-  const displaySrc = coverImage.includes('/image/upload/') && !coverImage.includes('w_')
-    ? coverImage.replace('/image/upload/', '/image/upload/w_800,c_scale,')
+  const displaySrc = coverImage.includes('/image/upload/')
+    ? coverImage.replace(/\/image\/upload\/(?:.*\/)?(?=v\d+)/, '/image/upload/w_800,c_scale,f_auto,q_auto/')
     : coverImage;
 
   return (

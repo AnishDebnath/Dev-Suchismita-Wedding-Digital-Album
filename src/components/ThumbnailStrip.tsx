@@ -87,11 +87,8 @@ export const ThumbnailStrip: React.FC<ThumbnailStripProps> = ({
 
   // ponytail: optimize Cloudinary preview URLs for ultra-fast lightweight thumbnails (~20-25KB each)
   const toThumbnailUrl = (url?: string) => {
-    if (!url) return url;
-    if (url.includes('/image/upload/') && !url.includes('w_')) {
-      return url.replace('/image/upload/', '/image/upload/w_360,c_scale,');
-    }
-    return url;
+    if (!url || !url.includes('/image/upload/')) return url;
+    return url.replace(/\/image\/upload\/(?:.*\/)?(?=v\d+)/, '/image/upload/w_360,c_scale,f_auto,q_auto/');
   };
 
   return (

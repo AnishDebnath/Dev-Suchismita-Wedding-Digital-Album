@@ -3,8 +3,8 @@ const CLOUDINARY_BASE_URL = (
   import.meta.env.VITE_CLOUDINARY_BASE_URL || ''
 ).trim().replace(/\/+$/, '');
 
-// Automatic format (WebP/AVIF) and quality optimization for ultra-fast loading
-const CLOUDINARY_MEDIA = `${CLOUDINARY_BASE_URL}/f_auto,q_auto`;
+// ponytail: All album images optimized with w_1600, f_auto, q_auto for rapid loading without quality loss
+const CLOUDINARY_MEDIA = `${CLOUDINARY_BASE_URL}/w_1600,c_scale,f_auto,q_auto`;
 
 export interface AlbumData {
   id: string;

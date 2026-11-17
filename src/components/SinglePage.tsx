@@ -17,9 +17,14 @@ export const SinglePage: React.FC<SinglePageProps> = ({
 
   return (
     <div 
-      className="relative w-full h-full bg-[#0d0e11] overflow-hidden select-none"
+      className="relative w-full h-full bg-[#faf8f5] overflow-hidden select-none"
       data-density="soft"
     >
+      {/* Warm Archival Photo Paper Base & Loading Shimmer (prevents black flash) */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#fcfbf9] via-[#f7f4ec] to-[#eee8dc] flex items-center justify-center">
+        <div className="w-7 h-7 rounded-full border-2 border-[#b8860b]/20 border-t-[#b8860b]/70 animate-spin" />
+      </div>
+
       {/* Full Bleed Edge-to-Edge Photograph in 3:2 ratio */}
       <div className="absolute inset-0 overflow-hidden flex items-center justify-center">
         <img
@@ -31,9 +36,9 @@ export const SinglePage: React.FC<SinglePageProps> = ({
             }
           }}
           alt={item.title || (pageNumber ? `Album page ${pageNumber} — Dev & Suchismita Wedding` : 'Album photograph')}
-          className="w-full h-full object-cover select-none pointer-events-none brightness-[0.98] contrast-[1.02]"
+          className="w-full h-full object-cover select-none pointer-events-none brightness-[0.98] contrast-[1.02] relative z-1"
           style={{ aspectRatio: '3 / 2' }}
-          loading="lazy"
+          loading="eager"
           decoding="async"
           draggable={false}
         />

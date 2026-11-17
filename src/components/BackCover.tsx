@@ -71,7 +71,7 @@ export const BackCover: React.FC<BackCoverProps> = ({ config }) => {
             alt="Back cover — Dev & Suchismita Wedding Digital Album"
             className="w-full h-full object-cover"
             style={{ aspectRatio: '3 / 2' }}
-            loading="lazy"
+            loading="eager"
             decoding="async"
           />
         </div>

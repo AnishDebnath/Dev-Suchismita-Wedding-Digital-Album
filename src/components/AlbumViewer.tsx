@@ -134,6 +134,30 @@ export const AlbumViewer: React.FC<AlbumViewerProps> = ({ config, onBackToAlbums
     setTotalPages(leaves.length);
   }, [leaves.length]);
 
+  // ponytail: proactively preload nearby pages into browser cache to eliminate loading delay & black screens on flip
+  useEffect(() => {
+    const pagesToPreload = [
+      currentPage,
+      currentPage + 1,
+      currentPage + 2,
+      currentPage + 3,
+      currentPage + 4,
+      currentPage - 1,
+      currentPage - 2,
+    ];
+
+    pagesToPreload.forEach((idx) => {
+      if (idx >= 0 && idx < leaves.length) {
+        const leaf = leaves[idx];
+        const src = leaf?.originalItem?.src || leaf?.previewSrc;
+        if (src) {
+          const img = new Image();
+          img.src = src;
+        }
+      }
+    });
+  }, [currentPage, leaves]);
+
   // Window resize & orientation change handler
   useEffect(() => {
     let resizeTimer: NodeJS.Timeout | null = null;
@@ -642,7 +666,12 @@ export const AlbumViewer: React.FC<AlbumViewerProps> = ({ config, onBackToAlbums
             style={{
               width: `${albumDimensions.singlePageWidth}px`,
               height: `${albumDimensions.singlePageHeight}px`,
-              backgroundColor: '#0c0d10',
+              backgroundColor:
+                leaf.itemType === 'cover' || leaf.itemType === 'cover-back'
+                  ? '#2d0402'
+                  : leaf.itemType === 'flyleaf' || leaf.itemType === 'credit'
+                  ? '#101114'
+                  : '#faf8f5',
             }}
           >
             {leaf.itemType === 'cover' && <Cover config={config} />}

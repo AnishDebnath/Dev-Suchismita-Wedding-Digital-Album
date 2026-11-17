@@ -17,9 +17,14 @@ export const DoublePageSpreadLeaf: React.FC<DoublePageSpreadLeafProps> = ({
 
   return (
     <div 
-      className="relative w-full h-full bg-[#0d0e11] overflow-hidden select-none"
+      className="relative w-full h-full bg-[#faf8f5] overflow-hidden select-none"
       data-density="soft"
     >
+      {/* Warm Archival Photo Paper Base & Loading Shimmer (prevents black flash) */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#fcfbf9] via-[#f7f4ec] to-[#eee8dc] flex items-center justify-center">
+        <div className="w-7 h-7 rounded-full border-2 border-[#b8860b]/20 border-t-[#b8860b]/70 animate-spin" />
+      </div>
+
       {/* 
         Continuous panoramic image rendering:
         The full 3:1 image spans 200% width of a single 3:2 page.
@@ -28,7 +33,7 @@ export const DoublePageSpreadLeaf: React.FC<DoublePageSpreadLeafProps> = ({
         Overflow is hidden, ensuring pixel-perfect continuity across the central spine.
       */}
       <div 
-        className="absolute top-0 bottom-0 overflow-hidden"
+        className="absolute top-0 bottom-0 overflow-hidden z-1"
         style={{
           width: '200%',
           left: isLeft ? '0%' : '-100%',
@@ -45,7 +50,7 @@ export const DoublePageSpreadLeaf: React.FC<DoublePageSpreadLeafProps> = ({
           }}
           alt={item.title || (pageNumber ? `Album spread ${pageNumber} — Dev & Suchismita Wedding` : 'Album panoramic spread')}
           className="w-full h-full object-cover select-none pointer-events-none brightness-[0.98] contrast-[1.03]"
-          loading="lazy"
+          loading="eager"
           decoding="async"
           draggable={false}
         />
