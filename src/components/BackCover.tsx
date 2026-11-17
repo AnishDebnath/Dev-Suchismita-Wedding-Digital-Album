@@ -1,15 +1,13 @@
 import React from 'react';
 import { AlbumConfig } from '@/data/album.config';
-import { assets } from '@/assets';
 
 interface BackCoverProps {
   config: AlbumConfig;
-  onRestart?: () => void;
 }
 
 export const BackCover: React.FC<BackCoverProps> = ({ config }) => {
   const backItem = config.items.find(i => i.type === 'cover-back');
-  const coverImage = backItem?.src || backItem?.fallbackSrc || assets.backCover;
+  const coverImage = backItem?.src || backItem?.fallbackSrc || '';
 
   return (
     <div 

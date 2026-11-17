@@ -1,5 +1,4 @@
 import { AlbumConfig, AlbumItemConfig } from '@/data/album.config';
-import { assets } from '@/assets';
 
 export interface CompiledLeaf {
   id: string;
@@ -29,7 +28,7 @@ export function compileAlbumLeaves(config: AlbumConfig): CompiledLeaf[] {
     pageNumber: 0,
     density: 'hard',
     label: 'Front Cover',
-    previewSrc: frontCoverItem?.src || assets.frontCover,
+    previewSrc: frontCoverItem?.src || '',
     fallbackSrc: frontCoverItem?.fallbackSrc,
   });
 
@@ -57,7 +56,7 @@ export function compileAlbumLeaves(config: AlbumConfig): CompiledLeaf[] {
       pageNumber: 0,
       density: 'soft',
       label: 'Photographer Credits',
-      previewSrc: frontCoverItem?.src || assets.frontCover,
+      previewSrc: frontCoverItem?.src || '',
     });
     isNextLeft = false;
 
@@ -234,7 +233,7 @@ export function compileAlbumLeaves(config: AlbumConfig): CompiledLeaf[] {
     pageNumber: 0,
     density: 'hard',
     label: 'Back Cover',
-    previewSrc: finalBackCoverItem?.src || assets.backCover,
+    previewSrc: finalBackCoverItem?.src || '',
     fallbackSrc: finalBackCoverItem?.fallbackSrc,
   });
 

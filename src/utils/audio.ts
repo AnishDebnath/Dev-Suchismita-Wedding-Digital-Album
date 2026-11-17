@@ -24,14 +24,6 @@ class PageSoundManager {
     this.isMuted = muted;
   }
 
-  public getMuted(): boolean {
-    return this.isMuted;
-  }
-
-  public setVolume(vol: number) {
-    this.volume = Math.max(0, Math.min(1, vol));
-  }
-
   /**
    * Synthesize a tactile, crisp page turn / leaf flip sound
    */

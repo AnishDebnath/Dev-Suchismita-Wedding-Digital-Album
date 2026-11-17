@@ -1,6 +1,5 @@
 import React from 'react';
 import { AlbumItemConfig } from '@/data/album.config';
-import { assets } from '@/assets';
 
 interface DoublePageSpreadLeafProps {
   item: AlbumItemConfig;
@@ -13,7 +12,7 @@ export const DoublePageSpreadLeaf: React.FC<DoublePageSpreadLeafProps> = ({
   isLeft,
   pageNumber,
 }) => {
-  const imageSrc = item.src || item.fallbackSrc || assets.page02;
+  const imageSrc = item.src || item.fallbackSrc || '';
 
   return (
     <div 

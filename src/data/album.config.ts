@@ -12,7 +12,7 @@
 
 import tphLogo from '@/assets/tph.png';
 import mindtrixLogo from '@/assets/watermark.png';
-import { AlbumData, albums } from './albums';
+import { AlbumData } from './albums';
 
 export interface AlbumDimensions {
   closedWidthInches: number;
@@ -48,8 +48,6 @@ export interface AlbumItemConfig {
   // For continuous panoramic spreads
   layout?: 'two-page-continuous' | 'single-page';
   aspectRatio?: string; // "3:1"
-  splitAt?: number;      // 0.5 for center fold
-  preserveOriginalImage?: boolean;
   // For photographer credit page
   creditInfo?: PhotographerCreditInfo;
   isLeft?: boolean;
@@ -189,6 +187,3 @@ export function buildAlbumConfig(album: AlbumData): AlbumConfig {
     ],
   };
 }
-
-// Default export for backwards compatibility
-export const albumConfig: AlbumConfig = buildAlbumConfig(albums[1] || albums[0]);

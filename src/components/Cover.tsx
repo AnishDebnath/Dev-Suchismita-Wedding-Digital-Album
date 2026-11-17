@@ -1,15 +1,13 @@
 import React from 'react';
 import { AlbumConfig } from '@/data/album.config';
-import { assets } from '@/assets';
 
 interface CoverProps {
   config: AlbumConfig;
-  onOpen?: () => void;
 }
 
 export const Cover: React.FC<CoverProps> = ({ config }) => {
   const frontCoverItem = config.items.find(i => i.type === 'cover');
-  const coverImage = frontCoverItem?.src || frontCoverItem?.fallbackSrc || assets.frontCover;
+  const coverImage = frontCoverItem?.src || frontCoverItem?.fallbackSrc || '';
 
   return (
     <div 

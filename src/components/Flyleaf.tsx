@@ -5,7 +5,6 @@ import tphLogo from '@/assets/tph.png';
 interface FlyleafProps {
   config: AlbumConfig;
   isLeft: boolean;
-  isClosing?: boolean;
   originalItem?: AlbumItemConfig;
 }
 

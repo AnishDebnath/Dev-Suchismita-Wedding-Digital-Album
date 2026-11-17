@@ -1,6 +1,5 @@
 import React from 'react';
 import { AlbumItemConfig } from '@/data/album.config';
-import { assets } from '@/assets';
 
 interface SinglePageProps {
   item: AlbumItemConfig;
@@ -13,7 +12,7 @@ export const SinglePage: React.FC<SinglePageProps> = ({
   isLeft,
   pageNumber,
 }) => {
-  const imageSrc = item.src || item.fallbackSrc || assets.page01;
+  const imageSrc = item.src || item.fallbackSrc || '';
 
   return (
     <div 

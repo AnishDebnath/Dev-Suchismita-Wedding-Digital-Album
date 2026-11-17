@@ -69,7 +69,6 @@ export const AlbumViewer: React.FC<AlbumViewerProps> = ({ config, onBackToAlbums
   const [uiVisible, setUiVisible] = useState<boolean>(true);
   const [uiHovered, setUiHovered] = useState<boolean>(false);
   const [showSettings, setShowSettings] = useState<boolean>(false);
-  const [showAbout, setShowAbout] = useState<boolean>(false);
   const fadeTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Inactivity fade timer: automatically hides UI after 4s of no interaction
@@ -77,7 +76,7 @@ export const AlbumViewer: React.FC<AlbumViewerProps> = ({ config, onBackToAlbums
     const resetTimer = () => {
       setUiVisible(true);
       if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
-      if (!uiHovered && !showSettings && !showThumbnails && !showAbout) {
+      if (!uiHovered && !showSettings && !showThumbnails) {
         fadeTimerRef.current = setTimeout(() => setUiVisible(false), 4000);
       }
     };
@@ -94,15 +93,15 @@ export const AlbumViewer: React.FC<AlbumViewerProps> = ({ config, onBackToAlbums
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('touchstart', handleTouchStart);
     };
-  }, [uiHovered, showSettings, showThumbnails, showAbout]);
+  }, [uiHovered, showSettings, showThumbnails]);
 
-  // Keep visible whenever settings/about/thumbnails open or hovered
+  // Keep visible whenever settings/thumbnails open or hovered
   useEffect(() => {
-    if (showSettings || showThumbnails || showAbout || uiHovered) {
+    if (showSettings || showThumbnails || uiHovered) {
       setUiVisible(true);
       if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
     }
-  }, [showSettings, showThumbnails, showAbout, uiHovered]);
+  }, [showSettings, showThumbnails, uiHovered]);
 
   // Compile leaves
   const leaves: CompiledLeaf[] = useMemo(() => compileAlbumLeaves(config), [config]);
@@ -680,7 +679,6 @@ export const AlbumViewer: React.FC<AlbumViewerProps> = ({ config, onBackToAlbums
               <Flyleaf 
                 config={config} 
                 isLeft={leaf.isLeft}
-                isClosing={leaf.label.includes('Closing')}
                 originalItem={leaf.originalItem}
               />
             )}
@@ -702,7 +700,6 @@ export const AlbumViewer: React.FC<AlbumViewerProps> = ({ config, onBackToAlbums
               <PhotographerCredit 
                 credit={leaf.originalItem?.creditInfo || config.photographer}
                 isLeft={leaf.isLeft}
-                pageNumber={leaf.pageNumber}
                 date={config.weddingDate}
                 location={config.weddingLocation}
               />
@@ -809,7 +806,6 @@ export const AlbumViewer: React.FC<AlbumViewerProps> = ({ config, onBackToAlbums
         intervalOptions={config.autoplay.intervalOptionsSeconds}
         isMuted={isMuted}
         isFullscreen={isFullscreen}
-        selectedSize={selectedSize}
         isShortLandscape={albumDimensions.isShortLandscape}
         isMobile={albumDimensions.isMobile}
         onPrev={handlePrev}
@@ -819,9 +815,6 @@ export const AlbumViewer: React.FC<AlbumViewerProps> = ({ config, onBackToAlbums
         onRestart={handleRestart}
         onToggleMute={handleToggleMute}
         onToggleFullscreen={handleToggleFullscreen}
-        onChangeSize={(size) => {
-          setSelectedSize(size);
-        }}
         onToggleThumbnails={() => setShowThumbnails(prev => !prev)}
         showThumbnails={showThumbnails}
         isVisible={uiVisible}
@@ -829,8 +822,6 @@ export const AlbumViewer: React.FC<AlbumViewerProps> = ({ config, onBackToAlbums
         setIsHovered={setUiHovered}
         showSettings={showSettings}
         setShowSettings={setShowSettings}
-        showAbout={showAbout}
-        setShowAbout={setShowAbout}
         renewalDue={renewalDue}
         onRenewalExpire={() => setRenewalDue(true)}
       />

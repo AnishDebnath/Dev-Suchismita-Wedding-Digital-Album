@@ -5,7 +5,6 @@ import { PhotographerCreditInfo } from '@/data/album.config';
 interface PhotographerCreditProps {
   credit: PhotographerCreditInfo;
   isLeft: boolean;
-  pageNumber?: number;
   date?: string;
   location?: string;
 }
