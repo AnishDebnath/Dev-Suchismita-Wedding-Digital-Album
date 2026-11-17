@@ -21,12 +21,12 @@ export function calculateAlbumSize(
   const isMobile = isShortLandscape || windowWidth < 768;
 
   // Adaptive reserved padding for controls, header, and margins:
-  // Mobile landscape: tightly tuned so book gets maximum screen area without colliding with controls
+  // ponytail: tuned so book gets maximum screen area without colliding with controls in mobile
   const paddingX = isShortLandscape ? 24 : isMobile ? 36 : windowWidth < 1200 ? 56 : 80;
   const paddingY = isShortLandscape 
-    ? (windowHeight < 420 ? 54 : 68) 
+    ? 136
     : isMobile 
-    ? 80 
+    ? 120 
     : windowHeight < 768 
     ? 96 
     : 120;

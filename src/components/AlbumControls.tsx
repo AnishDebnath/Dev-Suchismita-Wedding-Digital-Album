@@ -12,6 +12,7 @@ import {
   LayoutGrid,
   SlidersHorizontal,
   BookOpen,
+  Share2,
   X
 } from 'lucide-react';
 import { RenewalCountdown } from './RenewalCountdown';
@@ -92,6 +93,7 @@ export const AlbumControls: React.FC<AlbumControlsProps> = ({
   renewalDue = false,
   onRenewalExpire,
 }) => {
+  const isMobileView = isMobile || isShortLandscape;
 
   return (
     <>
@@ -158,14 +160,15 @@ export const AlbumControls: React.FC<AlbumControlsProps> = ({
 
       {/* Bottom Detection Zone: Wakes up controls when cursor approaches bottom */}
       <div
-        className="fixed bottom-0 left-0 right-0 h-24 z-40 pointer-events-auto"
+        className={`fixed bottom-0 left-0 right-0 ${isMobileView ? 'h-16' : 'h-24'} z-40 pointer-events-auto`}
         onMouseEnter={() => setIsHovered(true)}
       />
 
       {/* Bottom-Left Editorial Metadata Status */}
       <div
-        className={`fixed ${isShortLandscape ? 'bottom-2 left-4 text-[10px] hidden sm:flex' : 'bottom-6 left-6 sm:left-10 text-xs sm:text-sm'} z-40 pointer-events-auto flex items-center gap-2 font-sans transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
-          }`}
+        className={`fixed ${isMobileView ? 'bottom-2 left-4 text-[11px] hidden xs:flex' : 'bottom-6 left-6 sm:left-10 text-xs sm:text-sm flex'} z-40 pointer-events-auto items-center gap-2 font-sans transition-all duration-700 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
+        }`}
       >
         <span className="font-semibold text-neutral-900 tracking-wide">
           {currentSpreadLabel}
@@ -173,17 +176,18 @@ export const AlbumControls: React.FC<AlbumControlsProps> = ({
         {currentSpreadTitle && !isCover && !isBackCover && !currentSpreadLabel.startsWith('Page') && (
           <>
             <span className="text-neutral-300" aria-hidden="true">·</span>
-            <span className="text-neutral-500 font-medium truncate max-w-[220px]">
+            <span className="text-neutral-500 font-medium truncate max-w-[180px] sm:max-w-[220px]">
               {currentSpreadTitle}
             </span>
           </>
         )}
       </div>
 
-      {/* Bottom-Right Minimal Interaction Guidance */}
+      {/* Bottom-Right Minimal Interaction Guidance - desktop only */}
       <div
-        className={`fixed bottom-6 right-6 sm:right-10 z-40 pointer-events-auto ${isShortLandscape ? 'hidden' : 'hidden md:flex'} items-center gap-2 text-[11px] font-sans text-neutral-400 tracking-wide transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
-          }`}
+        className={`fixed bottom-6 right-6 sm:right-10 z-40 pointer-events-auto ${isMobileView ? 'hidden' : 'hidden md:flex'} items-center gap-2 text-[11px] font-sans text-neutral-400 tracking-wide transition-all duration-700 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
+        }`}
       >
         <span>← / → Page</span>
         <span aria-hidden="true">·</span>
@@ -193,17 +197,23 @@ export const AlbumControls: React.FC<AlbumControlsProps> = ({
       </div>
 
       {/* Floating Bottom Navigation Pill Dock */}
+      {/* ponytail: proper comfortable sizing on mobile with all features/settings intact; album clearance controlled via responsive padding */}
       <div
-        className={`fixed ${isShortLandscape ? 'bottom-2 sm:bottom-3 scale-95' : 'bottom-5 sm:bottom-6'} left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-auto transition-all duration-700 ease-out ${isVisible
-          ? 'opacity-100 translate-y-0'
-          : 'opacity-0 translate-y-3 pointer-events-none'
-          }`}
+        className={`fixed ${
+          isMobileView
+            ? 'bottom-2 scale-[0.88] sm:scale-100 origin-bottom gap-1.5'
+            : 'bottom-6 scale-100 gap-2'
+        } left-1/2 -translate-x-1/2 z-50 flex flex-col items-center pointer-events-auto transition-all duration-700 ease-out ${
+          isVisible
+            ? 'opacity-100 translate-y-0'
+            : 'opacity-0 translate-y-3 pointer-events-none'
+        }`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Settings Flyout Popover */}
+        {/* Settings Flyout Popover - fully available on all devices */}
         {showSettings && (
-          <div className="mb-2 p-4 bg-white/95 backdrop-blur-xl border border-neutral-200/90 rounded-2xl shadow-[0_16px_40px_rgba(0,0,0,0.12)] text-xs flex flex-col gap-3.5 min-w-[300px] animate-in fade-in slide-in-from-bottom-2 duration-300 text-neutral-800">
+          <div className="mb-2 p-3.5 sm:p-4 bg-white/95 backdrop-blur-xl border border-neutral-200/90 rounded-2xl shadow-[0_16px_40px_rgba(0,0,0,0.12)] text-xs flex flex-col gap-3 sm:gap-3.5 min-w-[270px] sm:min-w-[300px] animate-in fade-in slide-in-from-bottom-2 duration-300 text-neutral-800">
             {/* Header */}
             <div className="flex items-center justify-between pb-2 border-b border-neutral-100">
               <span className="font-sans font-semibold text-neutral-900 text-xs">Pacing &amp; Format</span>
@@ -224,10 +234,11 @@ export const AlbumControls: React.FC<AlbumControlsProps> = ({
                   <button
                     key={sec}
                     onClick={() => onChangeInterval(sec)}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-sans font-medium transition-all ${autoplayInterval === sec
-                      ? 'bg-neutral-900 text-white shadow-xs'
-                      : 'text-neutral-600 hover:text-neutral-900'
-                      }`}
+                    className={`px-2.5 py-1 rounded-md text-[11px] font-sans font-medium transition-all ${
+                      autoplayInterval === sec
+                        ? 'bg-neutral-900 text-white shadow-xs'
+                        : 'text-neutral-600 hover:text-neutral-900'
+                    }`}
                   >
                     {sec}s
                   </button>
@@ -235,38 +246,20 @@ export const AlbumControls: React.FC<AlbumControlsProps> = ({
               </div>
             </div>
 
-            {/* Physical Album Format: Commented out per user request */}
-            {/* 
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-neutral-600 font-sans text-xs">Dimensions</span>
-              <div className="flex items-center gap-1 bg-neutral-100 p-0.5 rounded-lg border border-neutral-200/50">
-                {(['standard', 'extended', 'large'] as const).map((sz) => (
-                  <button
-                    key={sz}
-                    onClick={() => onChangeSize(sz)}
-                    className={`px-2.5 py-1 rounded-md text-[11px] capitalize transition-all font-sans font-medium ${
-                      selectedSize === sz
-                        ? 'bg-neutral-900 text-white shadow-xs'
-                        : 'text-neutral-600 hover:text-neutral-900'
-                    }`}
-                  >
-                    {sz === 'standard' ? '12×18"' : sz === 'extended' ? '13×20"' : '14×20"'}
-                  </button>
-                ))}
-              </div>
-            </div>
-            */}
-
             <div className="pt-2 border-t border-neutral-100 flex justify-between items-center text-[10px] text-neutral-400 font-sans">
               <span>Fine Art Flush Mount Silk Edition</span>
             </div>
           </div>
         )}
 
-        {/* Minimalist Pill Dock */}
+        {/* Minimalist Pill Dock - all controls and settings present */}
         <nav
           aria-label="Album Navigation Controls"
-          className="flex items-center gap-1 sm:gap-1.5 px-3 py-1.5 bg-white/95 backdrop-blur-xl rounded-full border border-neutral-200/80 shadow-[0_10px_35px_rgba(0,0,0,0.08)] ring-1 ring-black/5"
+          className={`flex items-center ${
+            isMobileView
+              ? 'gap-1 px-2 py-1 shadow-[0_6px_24px_rgba(0,0,0,0.08)]'
+              : 'gap-1.5 px-3 py-1.5 shadow-[0_10px_35px_rgba(0,0,0,0.08)]'
+          } bg-white/95 backdrop-blur-xl rounded-full border border-neutral-200/80 ring-1 ring-black/5`}
         >
           {/* 0. Return to 3 Albums Showcase */}
           {onBackToAlbums && (
@@ -274,7 +267,9 @@ export const AlbumControls: React.FC<AlbumControlsProps> = ({
               onClick={onBackToAlbums}
               title="All 3 Albums"
               aria-label="Return to All Albums"
-              className="p-2 rounded-full text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 active:scale-95 transition-all"
+              className={`${
+                isMobileView ? 'p-1.5' : 'p-2'
+              } rounded-full text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 active:scale-95 transition-all`}
             >
               <BookOpen className="w-4 h-4" />
             </button>
@@ -285,7 +280,9 @@ export const AlbumControls: React.FC<AlbumControlsProps> = ({
             onClick={onRestart}
             title="Restart to Front Cover (Home)"
             aria-label="Restart Album"
-            className="p-2 rounded-full text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 active:scale-95 transition-all group"
+            className={`${
+              isMobileView ? 'p-1.5' : 'p-2'
+            } rounded-full text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 active:scale-95 transition-all group`}
           >
             <RotateCcw className="w-4 h-4 transition-transform duration-500 group-hover:-rotate-90" />
           </button>
@@ -296,7 +293,9 @@ export const AlbumControls: React.FC<AlbumControlsProps> = ({
             disabled={isCover}
             title="Previous Page (Left Arrow)"
             aria-label="Previous Page"
-            className="p-2 rounded-full text-neutral-700 hover:text-black hover:bg-neutral-100 disabled:opacity-30 disabled:hover:bg-transparent disabled:pointer-events-none active:scale-95 transition-all"
+            className={`${
+              isMobileView ? 'p-1.5' : 'p-2'
+            } rounded-full text-neutral-700 hover:text-black hover:bg-neutral-100 disabled:opacity-30 disabled:hover:bg-transparent disabled:pointer-events-none active:scale-95 transition-all`}
           >
             <ChevronLeft className="w-4.5 h-4.5" />
           </button>
@@ -306,10 +305,13 @@ export const AlbumControls: React.FC<AlbumControlsProps> = ({
             onClick={onToggleAutoplay}
             title={isAutoplay ? "Pause Slideshow" : "Play Slideshow"}
             aria-label={isAutoplay ? "Pause Slideshow" : "Play Slideshow"}
-            className={`p-2 rounded-full transition-all duration-300 active:scale-95 flex items-center justify-center ${isAutoplay
-              ? 'bg-neutral-900 text-white shadow-xs'
-              : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-900'
-              }`}
+            className={`${
+              isMobileView ? 'p-1.5' : 'p-2'
+            } rounded-full transition-all duration-300 active:scale-95 flex items-center justify-center ${
+              isAutoplay
+                ? 'bg-neutral-900 text-white shadow-xs'
+                : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-900'
+            }`}
           >
             {isAutoplay ? (
               <Pause className="w-4 h-4 fill-current" />
@@ -324,23 +326,28 @@ export const AlbumControls: React.FC<AlbumControlsProps> = ({
             disabled={isBackCover}
             title="Next Page (Right Arrow)"
             aria-label="Next Page"
-            className="p-2 rounded-full text-neutral-700 hover:text-black hover:bg-neutral-100 disabled:opacity-30 disabled:hover:bg-transparent disabled:pointer-events-none active:scale-95 transition-all"
+            className={`${
+              isMobileView ? 'p-1.5' : 'p-2'
+            } rounded-full text-neutral-700 hover:text-black hover:bg-neutral-100 disabled:opacity-30 disabled:hover:bg-transparent disabled:pointer-events-none active:scale-95 transition-all`}
           >
             <ChevronRight className="w-4.5 h-4.5" />
           </button>
 
           {/* Hairline Divider */}
-          <div className="w-px h-4 bg-neutral-200 mx-1" />
+          <div className={`w-px ${isMobileView ? 'h-3.5 mx-0.5' : 'h-4 mx-1'} bg-neutral-200`} />
 
           {/* Spreads Overview Grid */}
           <button
             onClick={onToggleThumbnails}
             title="Spreads Overview"
             aria-label="Toggle Spreads Overview"
-            className={`p-2 rounded-full transition-all active:scale-95 ${showThumbnails
-              ? 'text-neutral-950 bg-neutral-100 font-semibold'
-              : 'text-neutral-500 hover:text-neutral-950 hover:bg-neutral-100'
-              }`}
+            className={`${
+              isMobileView ? 'p-1.5' : 'p-2'
+            } rounded-full transition-all active:scale-95 ${
+              showThumbnails
+                ? 'text-neutral-950 bg-neutral-100 font-semibold'
+                : 'text-neutral-500 hover:text-neutral-950 hover:bg-neutral-100'
+            }`}
           >
             <LayoutGrid className="w-4 h-4" />
           </button>
@@ -350,10 +357,13 @@ export const AlbumControls: React.FC<AlbumControlsProps> = ({
             onClick={onToggleMute}
             title={isMuted ? "Unmute Sound" : "Mute Sound"}
             aria-label={isMuted ? "Unmute Sound" : "Mute Sound"}
-            className={`p-2 rounded-full transition-all active:scale-95 ${isMuted
-              ? 'text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100'
-              : 'text-neutral-900 hover:bg-neutral-100'
-              }`}
+            className={`${
+              isMobileView ? 'p-1.5' : 'p-2'
+            } rounded-full transition-all active:scale-95 ${
+              isMuted
+                ? 'text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100'
+                : 'text-neutral-900 hover:bg-neutral-100'
+            }`}
           >
             {isMuted ? (
               <VolumeX className="w-4 h-4" />
@@ -362,25 +372,30 @@ export const AlbumControls: React.FC<AlbumControlsProps> = ({
             )}
           </button>
 
-          {/* Album Settings Popover Toggle */}
+          {/* Album Settings Popover Toggle - all devices */}
           <button
             onClick={() => setShowSettings(!showSettings)}
             title="Pacing & Dimensions"
             aria-label="Album Settings"
-            className={`p-2 rounded-full transition-all active:scale-95 ${showSettings
-              ? 'text-neutral-950 bg-neutral-100'
-              : 'text-neutral-500 hover:text-neutral-950 hover:bg-neutral-100'
-              }`}
+            className={`${
+              isMobileView ? 'p-1.5' : 'p-2'
+            } rounded-full transition-all active:scale-95 ${
+              showSettings
+                ? 'text-neutral-950 bg-neutral-100'
+                : 'text-neutral-500 hover:text-neutral-950 hover:bg-neutral-100'
+            }`}
           >
             <SlidersHorizontal className="w-4 h-4" />
           </button>
 
-          {/* Fullscreen Mode */}
+          {/* Fullscreen Mode - all devices */}
           <button
             onClick={onToggleFullscreen}
             title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
             aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-            className="p-2 rounded-full text-neutral-500 hover:text-neutral-950 hover:bg-neutral-100 active:scale-95 transition-all"
+            className={`${
+              isMobileView ? 'p-1.5' : 'p-2'
+            } rounded-full text-neutral-500 hover:text-neutral-950 hover:bg-neutral-100 active:scale-95 transition-all`}
           >
             {isFullscreen ? (
               <Minimize2 className="w-4 h-4" />
@@ -404,9 +419,14 @@ export const AlbumControls: React.FC<AlbumControlsProps> = ({
             }}
             title="Share Album"
             aria-label="Share Album"
-            className={`px-4 py-2 rounded-full transition-all active:scale-95 bg-[#b8860b]/90 font-medium text-neutral-900 hover:bg-[#a77b0c]/95 hover:text-neutral-900 shadow-xs`}
+            className={`${
+              isMobileView
+                ? 'px-3 py-1.5 text-xs'
+                : 'px-4 py-2 text-sm'
+            } rounded-full transition-all active:scale-95 bg-[#b8860b]/90 font-medium text-neutral-900 hover:bg-[#a77b0c]/95 shadow-xs flex items-center gap-1.5 justify-center`}
           >
-            Share
+            <Share2 className="w-3.5 h-3.5" />
+            <span>Share</span>
           </button>
         </nav>
       </div>
