@@ -3,7 +3,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { AlbumData } from '@/data/albums';
 import { AlbumBookCover } from './AlbumBookCover';
 import { RenewalCountdown } from './RenewalCountdown';
-import { BookOpen, ChevronRight, Calendar } from 'lucide-react';
+import { RotateScreenOverlay } from './RotateScreenOverlay';
+import { BookOpen, ChevronRight } from 'lucide-react';
 
 interface AlbumShowcaseProps {
   albums: AlbumData[];
@@ -45,16 +46,6 @@ export const AlbumShowcase: React.FC<AlbumShowcaseProps> = ({
 
   // 4. Exact proportional dimensions calculated so all 3 books fit without overflow
   const dimensions = useMemo(() => {
-    if (isPortrait) {
-      // Mobile Portrait: 3 stacked cards fitting in viewport height
-      const reservedHeader = Math.min(130, Math.round(viewport.height * 0.16));
-      const usableHeight = Math.max(280, viewport.height - reservedHeader - 24);
-      const cardHeight = Math.floor(usableHeight / 3);
-      const bookHeight = Math.max(68, Math.min(110, Math.floor(cardHeight - 20)));
-      const bookWidth = Math.round(bookHeight * 1.5);
-      return { bookWidth, bookHeight, cardHeight, isPortrait: true, isShortLandscape: false };
-    }
-
     if (isShortLandscape) {
       // Mobile Landscape: 3 horizontal books fitting tightly
       const reservedHeader = 50;
@@ -63,7 +54,7 @@ export const AlbumShowcase: React.FC<AlbumShowcaseProps> = ({
       const maxBookW = (viewport.width - 32 - 2 * gap) / 3;
       const bookHeight = Math.max(75, Math.min(130, Math.floor(Math.min(usableHeight, maxBookW / 1.5))));
       const bookWidth = Math.round(bookHeight * 1.5);
-      return { bookWidth, bookHeight, cardHeight: 0, isPortrait: false, isShortLandscape: true };
+      return { bookWidth, bookHeight, isShortLandscape: true };
     }
 
     // Standard Desktop / Tablet Landscape: 3 books side by side
@@ -74,8 +65,8 @@ export const AlbumShowcase: React.FC<AlbumShowcaseProps> = ({
     const maxBookW = (maxContentWidth - 2 * gap) / 3;
     const bookHeight = Math.max(120, Math.min(270, Math.floor(Math.min(usableHeight, maxBookW / 1.5))));
     const bookWidth = Math.round(bookHeight * 1.5);
-    return { bookWidth, bookHeight, cardHeight: 0, isPortrait: false, isShortLandscape: false };
-  }, [viewport.width, viewport.height, isPortrait, isShortLandscape]);
+    return { bookWidth, bookHeight, isShortLandscape: false };
+  }, [viewport.width, viewport.height, isShortLandscape]);
 
   return (
     <main
@@ -92,6 +83,9 @@ export const AlbumShowcase: React.FC<AlbumShowcaseProps> = ({
       <div className="absolute top-2.5 sm:top-4 right-3 sm:right-6 z-30 pointer-events-auto">
         <RenewalCountdown />
       </div>
+
+      {/* Vertical / Portrait Mode Rotate Screen Prompt Overlay — same as single album page */}
+      <RotateScreenOverlay isVisible={isPortrait} />
 
       {/* Header Bar — Pure Luxury Editorial Typography */}
       <header
@@ -132,116 +126,75 @@ export const AlbumShowcase: React.FC<AlbumShowcaseProps> = ({
         )}
       </header>
 
-      {/* Main Books Showcase Container */}
+      {/* Main Books Showcase Container — 3 Books Side-by-Side */}
       <section
         aria-label="Wedding Album Volumes"
-        className={`w-full flex-1 flex items-center justify-center z-10 ${
-          isPortrait ? 'px-3 py-1' : 'px-4 sm:px-8 py-2'
-        }`}
+        className="w-full flex-1 flex items-center justify-center z-10 px-4 sm:px-8 py-2"
       >
-        {isPortrait ? (
-          /* Mobile Portrait: 3 Stacked Luxury Cards */
-          <div className="w-full max-w-md flex flex-col justify-around gap-2.5 h-full max-h-[calc(100dvh-150px)]">
-            {albums.map((album, idx) => (
-              <article
-                key={album.id}
-                onClick={() => onSelectAlbum(album.id)}
-                className="group relative flex items-center gap-3.5 p-2.5 rounded-2xl bg-white/80 hover:bg-white/95 border border-neutral-200/90 shadow-xs hover:shadow-md transition-all duration-300 active:scale-[0.98] cursor-pointer"
-              >
-                {/* 3D Photobook Cover */}
-                <div className="shrink-0 flex items-center justify-center">
-                  <AlbumBookCover
-                    coverImage={album.coverImage}
-                    width={dimensions.bookWidth}
-                    height={dimensions.bookHeight}
-                    alt={`${album.title} Cover`}
-                  />
-                </div>
+        <div className="w-full max-w-7xl flex flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-8">
+          {albums.map((album) => (
+            <article
+              key={album.id}
+              onClick={() => onSelectAlbum(album.id)}
+              className="group flex flex-col items-center text-center cursor-pointer transition-all duration-500 ease-out focus:outline-none"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onSelectAlbum(album.id);
+                }
+              }}
+              style={{ width: `${dimensions.bookWidth}px` }}
+            >
+              {/* 3D Photobook Cover */}
+              <AlbumBookCover
+                coverImage={album.coverImage}
+                width={dimensions.bookWidth}
+                height={dimensions.bookHeight}
+                alt={`${album.title} Photobook Cover`}
+              />
 
-                {/* Album Details */}
-                <div className="flex-1 min-w-0 flex flex-col justify-center">
-                  <h2 className="text-base font-serif font-bold text-neutral-900 truncate">
-                    {album.title}
-                  </h2>
-                  <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 mt-0.5">
-                    <Calendar className="w-3 h-3 text-neutral-400" />
-                    <span>{album.date}</span>
-                  </div>
-                  <div className="mt-2 flex items-center gap-1 text-xs font-semibold text-[#8b6508] group-hover:text-black transition-colors">
-                    <span>Open Album</span>
-                    <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        ) : (
-          /* Landscape & Desktop: 3 Books Side-by-Side */
-          <div className="w-full max-w-7xl flex flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-8">
-            {albums.map((album, idx) => (
-              <article
-                key={album.id}
-                onClick={() => onSelectAlbum(album.id)}
-                className="group flex flex-col items-center text-center cursor-pointer transition-all duration-500 ease-out focus:outline-none"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    onSelectAlbum(album.id);
-                  }
-                }}
-                style={{ width: `${dimensions.bookWidth}px` }}
+              {/* Album Metadata & Action Button */}
+              <div
+                className={`flex flex-col items-center w-full transition-all duration-300 ${
+                  isShortLandscape ? 'mt-2' : 'mt-3 lg:mt-4'
+                }`}
               >
-                {/* 3D Photobook Cover */}
-                <AlbumBookCover
-                  coverImage={album.coverImage}
-                  width={dimensions.bookWidth}
-                  height={dimensions.bookHeight}
-                  alt={`${album.title} Photobook Cover`}
-                />
-
-                {/* Album Metadata & Action Button */}
-                <div
-                  className={`flex flex-col items-center w-full transition-all duration-300 ${
-                    isShortLandscape ? 'mt-2' : 'mt-3 lg:mt-4'
+                <h2
+                  className={`font-serif font-bold text-neutral-900 group-hover:text-black transition-colors truncate max-w-full ${
+                    isShortLandscape
+                      ? 'text-sm mt-0.5'
+                      : 'text-base lg:text-lg mt-1'
                   }`}
                 >
-                  <h2
-                    className={`font-serif font-bold text-neutral-900 group-hover:text-black transition-colors truncate max-w-full ${
-                      isShortLandscape
-                        ? 'text-sm mt-0.5'
-                        : 'text-base lg:text-lg mt-1'
-                    }`}
-                  >
-                    {album.title}
-                  </h2>
+                  {album.title}
+                </h2>
 
-                  <p className="text-[11px] lg:text-xs text-neutral-500 mt-0.5">
-                    {album.date}
-                  </p>
+                <p className="text-[11px] lg:text-xs text-neutral-500 mt-0.5">
+                  {album.date}
+                </p>
 
-                  {/* Open Button */}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSelectAlbum(album.id);
-                    }}
-                    className={`rounded-full transition-all duration-300 font-medium active:scale-95 flex items-center justify-center gap-1 shadow-xs border ${
-                      isShortLandscape
-                        ? 'mt-1.5 px-3 py-1 text-[11px] bg-white/90 group-hover:bg-[#b8860b] group-hover:text-white border-neutral-200'
-                        : 'mt-2.5 px-4 py-1.5 text-xs bg-white/90 hover:bg-[#b8860b] group-hover:bg-[#b8860b] text-neutral-800 group-hover:text-white hover:text-white border-neutral-300/80 group-hover:border-[#b8860b] shadow-xs'
-                    }`}
-                  >
-                    <BookOpen className="w-3.5 h-3.5" />
-                    <span>Open Album</span>
-                    <ChevronRight className="w-3.5 h-3.5 ml-0.5 transition-transform group-hover:translate-x-0.5" />
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
+                {/* Open Button */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectAlbum(album.id);
+                  }}
+                  className={`rounded-full transition-all duration-300 font-medium active:scale-95 flex items-center justify-center gap-1 shadow-xs border ${
+                    isShortLandscape
+                      ? 'mt-1.5 px-3 py-1 text-[11px] bg-white/90 group-hover:bg-[#b8860b] group-hover:text-white border-neutral-200'
+                      : 'mt-2.5 px-4 py-1.5 text-xs bg-white/90 hover:bg-[#b8860b] group-hover:bg-[#b8860b] text-neutral-800 group-hover:text-white hover:text-white border-neutral-300/80 group-hover:border-[#b8860b] shadow-xs'
+                  }`}
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>Open Album</span>
+                  <ChevronRight className="w-3.5 h-3.5 ml-0.5 transition-transform group-hover:translate-x-0.5" />
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
       </section>
 
       {/* Footer Credit */}

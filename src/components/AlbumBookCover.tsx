@@ -21,6 +21,11 @@ export const AlbumBookCover: React.FC<AlbumBookCoverProps> = ({
   const grooveW = Math.max(5, Math.min(10, Math.round(width * 0.022)));
   const bevelOffset = spineW + grooveW;
 
+  // ponytail: optimize Cloudinary cover image to responsive 800px display width for instant page load
+  const displaySrc = coverImage.includes('/image/upload/') && !coverImage.includes('w_')
+    ? coverImage.replace('/image/upload/', '/image/upload/w_800,c_scale,')
+    : coverImage;
+
   return (
     <div
       className={`relative select-none transition-all duration-500 ease-out group-hover:-translate-y-2 group-hover:scale-[1.02] ${className}`}
@@ -86,7 +91,12 @@ export const AlbumBookCover: React.FC<AlbumBookCoverProps> = ({
         {/* Front Cover Photograph */}
         <div className="absolute inset-0 z-0 flex items-center justify-center bg-neutral-900">
           <img
-            src={coverImage}
+            src={displaySrc}
+            onError={(e) => {
+              if (coverImage && e.currentTarget.src !== coverImage) {
+                e.currentTarget.src = coverImage;
+              }
+            }}
             alt={alt}
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             loading="eager"

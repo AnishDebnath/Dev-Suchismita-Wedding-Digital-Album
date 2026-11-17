@@ -1,7 +1,10 @@
-// ponytail: All album images loaded exclusively from Cloudinary via VITE_CLOUDINARY_BASE_URL in .env
+// ponytail: All album images loaded exclusively from Cloudinary with f_auto,q_auto optimization
 const CLOUDINARY_BASE_URL = (
   import.meta.env.VITE_CLOUDINARY_BASE_URL || ''
 ).trim().replace(/\/+$/, '');
+
+// Automatic format (WebP/AVIF) and quality optimization for ultra-fast loading
+const CLOUDINARY_MEDIA = `${CLOUDINARY_BASE_URL}/f_auto,q_auto`;
 
 export interface AlbumData {
   id: string;
@@ -17,19 +20,19 @@ export interface AlbumData {
 // 1. Pre-Wedding: 40 pages (0..39), Front Cover & Back cover
 const preWeddingPages: string[] = [];
 for (let i = 0; i <= 39; i++) {
-  preWeddingPages.push(`${CLOUDINARY_BASE_URL}/v1794879494/${i}.jpg`);
+  preWeddingPages.push(`${CLOUDINARY_MEDIA}/v1794879494/${i}.jpg`);
 }
 
 // 2. Wedding Ceremony: 70 pages (1..70), Front Cover & Back cover
 const weddingPages: string[] = [];
 for (let i = 1; i <= 70; i++) {
-  weddingPages.push(`${CLOUDINARY_BASE_URL}/v1794880867/dev-suchismita-wedding_${i}.jpg`);
+  weddingPages.push(`${CLOUDINARY_MEDIA}/v1794880867/dev-suchismita-wedding_${i}.jpg`);
 }
 
 // 3. Wedding Reception: 68 pages (1..68), Front Cover & Back cover
 const receptionPages: string[] = [];
 for (let i = 1; i <= 68; i++) {
-  receptionPages.push(`${CLOUDINARY_BASE_URL}/v1794880110/dev-suchismita-reception_${i}.jpg`);
+  receptionPages.push(`${CLOUDINARY_MEDIA}/v1794880110/dev-suchismita-reception_${i}.jpg`);
 }
 
 export const albums: AlbumData[] = [
@@ -39,8 +42,8 @@ export const albums: AlbumData[] = [
     subtitle: 'Moments of Anticipation & Love',
     date: '24 July 2025',
     folderName: 'Pre wedding 24 july 2025',
-    coverImage: `${CLOUDINARY_BASE_URL}/v1794879494/Front_Cover.jpg`,
-    backCoverImage: `${CLOUDINARY_BASE_URL}/v1794879494/Back_cover.jpg`,
+    coverImage: `${CLOUDINARY_MEDIA}/v1794879494/Front_Cover.jpg`,
+    backCoverImage: `${CLOUDINARY_MEDIA}/v1794879494/Back_cover.jpg`,
     pages: preWeddingPages,
   },
   {
@@ -49,8 +52,8 @@ export const albums: AlbumData[] = [
     subtitle: 'The Sacred Union & Eternal Vows',
     date: '3 August 2025',
     folderName: 'Wedding 3 Aug 2025',
-    coverImage: `${CLOUDINARY_BASE_URL}/v1794880867/dev-suchismita-wedding-front-cover.jpg`,
-    backCoverImage: `${CLOUDINARY_BASE_URL}/v1794880867/dev-suchismita-wedding-back-cover.jpg`,
+    coverImage: `${CLOUDINARY_MEDIA}/v1794880867/dev-suchismita-wedding-front-cover.jpg`,
+    backCoverImage: `${CLOUDINARY_MEDIA}/v1794880867/dev-suchismita-wedding-back-cover.jpg`,
     pages: weddingPages,
   },
   {
@@ -59,8 +62,8 @@ export const albums: AlbumData[] = [
     subtitle: 'Celebration, Feasts & Joy',
     date: '6 August 2025',
     folderName: 'Reception 6 Aug 2025',
-    coverImage: `${CLOUDINARY_BASE_URL}/v1794880110/dev-suchismita-reception-front-cover.jpg`,
-    backCoverImage: `${CLOUDINARY_BASE_URL}/v1794880110/dev-suchismita-reception-back-cover.jpg`,
+    coverImage: `${CLOUDINARY_MEDIA}/v1794880110/dev-suchismita-reception-front-cover.jpg`,
+    backCoverImage: `${CLOUDINARY_MEDIA}/v1794880110/dev-suchismita-reception-back-cover.jpg`,
     pages: receptionPages,
   },
 ];
