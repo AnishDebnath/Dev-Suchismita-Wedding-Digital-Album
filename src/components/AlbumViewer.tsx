@@ -226,6 +226,19 @@ export const AlbumViewer: React.FC<AlbumViewerProps> = ({ config, onBackToAlbums
       const clone = page.cloneNode(true) as HTMLElement;
       clone.style.width = `${albumDimensions.singlePageWidth}px`;
       clone.style.height = `${albumDimensions.singlePageHeight}px`;
+
+      // ponytail: ensure cloned DOM elements retain image onerror fallback
+      clone.querySelectorAll('img').forEach((img) => {
+        const fallback = img.getAttribute('data-fallback');
+        if (fallback) {
+          img.onerror = () => {
+            if (img.src !== fallback && !img.src.endsWith(fallback)) {
+              img.src = fallback;
+            }
+          };
+        }
+      });
+
       bookWrapper.appendChild(clone);
     });
 

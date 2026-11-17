@@ -63,8 +63,9 @@ export const Cover: React.FC<CoverProps> = ({ config }) => {
         <div className="absolute inset-0 z-0 flex items-center justify-center">
           <img 
             src={coverImage}
+            data-fallback={frontCoverItem?.fallbackSrc}
             onError={(e) => {
-              if (frontCoverItem?.fallbackSrc && e.currentTarget.src !== window.location.origin + frontCoverItem.fallbackSrc) {
+              if (frontCoverItem?.fallbackSrc && e.currentTarget.src !== frontCoverItem.fallbackSrc && !e.currentTarget.src.endsWith(frontCoverItem.fallbackSrc)) {
                 e.currentTarget.src = frontCoverItem.fallbackSrc;
               }
             }}

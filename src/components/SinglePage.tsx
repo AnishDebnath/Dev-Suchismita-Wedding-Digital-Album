@@ -24,8 +24,9 @@ export const SinglePage: React.FC<SinglePageProps> = ({
       <div className="absolute inset-0 overflow-hidden flex items-center justify-center">
         <img
           src={imageSrc}
+          data-fallback={item.fallbackSrc}
           onError={(e) => {
-            if (item.fallbackSrc && e.currentTarget.src !== window.location.origin + item.fallbackSrc) {
+            if (item.fallbackSrc && e.currentTarget.src !== item.fallbackSrc && !e.currentTarget.src.endsWith(item.fallbackSrc)) {
               e.currentTarget.src = item.fallbackSrc;
             }
           }}

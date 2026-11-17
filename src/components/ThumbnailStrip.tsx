@@ -201,7 +201,7 @@ export const ThumbnailStrip: React.FC<ThumbnailStripProps> = ({
                           <img
                             src={item.previewSrc}
                             onError={(e) => {
-                              if (item.fallbackSrc && e.currentTarget.src !== window.location.origin + item.fallbackSrc) {
+                              if (item.fallbackSrc && e.currentTarget.src !== item.fallbackSrc && !e.currentTarget.src.endsWith(item.fallbackSrc)) {
                                 e.currentTarget.src = item.fallbackSrc;
                               }
                             }}
@@ -220,7 +220,7 @@ export const ThumbnailStrip: React.FC<ThumbnailStripProps> = ({
                           <img
                             src={item.previewSrc}
                             onError={(e) => {
-                              if (item.fallbackSrc && e.currentTarget.src !== window.location.origin + item.fallbackSrc) {
+                              if (item.fallbackSrc && e.currentTarget.src !== item.fallbackSrc && !e.currentTarget.src.endsWith(item.fallbackSrc)) {
                                 e.currentTarget.src = item.fallbackSrc;
                               }
                             }}
@@ -240,7 +240,7 @@ export const ThumbnailStrip: React.FC<ThumbnailStripProps> = ({
                             <img
                               src={item.previewSrc}
                               onError={(e) => {
-                                if (item.fallbackSrc && e.currentTarget.src !== window.location.origin + item.fallbackSrc) {
+                                if (item.fallbackSrc && e.currentTarget.src !== item.fallbackSrc && !e.currentTarget.src.endsWith(item.fallbackSrc)) {
                                   e.currentTarget.src = item.fallbackSrc;
                                 }
                               }}
