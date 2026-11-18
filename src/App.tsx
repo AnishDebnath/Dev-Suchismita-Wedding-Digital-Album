@@ -11,17 +11,22 @@ import { buildAlbumConfig } from './data/album.config';
 import { backgroundMusic } from './utils/backgroundMusic';
 
 export default function App() {
-  // Read hash on initial mount (e.g. #pre-wedding, #wedding, #reception)
-  const getInitialAlbumId = (): string | null => {
+  // Read clean path URL on initial mount (e.g. /pre-wedding, /wedding, /reception)
+  const getAlbumFromUrl = (): string | null => {
     if (typeof window === 'undefined') return null;
+    const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
+    const found = albums.find(a => a.id === path);
+    if (found) return found.id;
+    // Fallback support for query param or legacy hash
+    const params = new URLSearchParams(window.location.search);
+    const paramAlbum = params.get('album');
+    if (paramAlbum && albums.some(a => a.id === paramAlbum)) return paramAlbum;
     const hash = window.location.hash.replace(/^#/, '');
-    if (albums.some(a => a.id === hash)) {
-      return hash;
-    }
+    if (hash && albums.some(a => a.id === hash)) return hash;
     return null;
   };
 
-  const [selectedAlbumId, setSelectedAlbumId] = useState<string | null>(getInitialAlbumId);
+  const [selectedAlbumId, setSelectedAlbumId] = useState<string | null>(getAlbumFromUrl);
 
   // Stop background music whenever user is on the 3-album home page
   useEffect(() => {
@@ -30,28 +35,23 @@ export default function App() {
     }
   }, [selectedAlbumId]);
 
-  // Sync hash changes (e.g. browser back/forward buttons)
+  // Sync browser back/forward buttons
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace(/^#/, '');
-      if (albums.some(a => a.id === hash)) {
-        setSelectedAlbumId(hash);
-      } else if (!hash) {
-        setSelectedAlbumId(null);
-      }
+    const handlePopState = () => {
+      setSelectedAlbumId(getAlbumFromUrl());
     };
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   const handleSelectAlbum = (id: string) => {
     setSelectedAlbumId(id);
-    window.location.hash = id;
+    window.history.pushState(null, '', `/${id}`);
   };
 
   const handleBackToAlbums = () => {
     setSelectedAlbumId(null);
-    history.pushState(null, '', window.location.pathname + window.location.search);
+    window.history.pushState(null, '', '/');
   };
 
   const activeAlbum = useMemo(() => {

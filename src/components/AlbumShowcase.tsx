@@ -89,9 +89,8 @@ export const AlbumShowcase: React.FC<AlbumShowcaseProps> = ({
 
       {/* Header Bar — Pure Luxury Editorial Typography */}
       <header
-        className={`w-full flex flex-col items-center text-center shrink-0 z-10 ${
-          isShortLandscape ? 'pt-2 pb-1' : isPortrait ? 'pt-4 sm:pt-5 pb-2 px-4' : 'pt-6 lg:pt-8 pb-3 px-6'
-        }`}
+        className={`w-full flex flex-col items-center text-center shrink-0 z-10 ${isShortLandscape ? 'pt-2 pb-1' : isPortrait ? 'pt-4 sm:pt-5 pb-2 px-4' : 'pt-6 lg:pt-8 pb-3 px-6'
+          }`}
       >
         {/* Studio Branding */}
         <div className="flex items-center justify-center gap-2.5 sm:gap-3 mb-1 sm:mb-1.5">
@@ -104,13 +103,12 @@ export const AlbumShowcase: React.FC<AlbumShowcaseProps> = ({
 
         {/* Main Couple Names */}
         <h1
-          className={`tracking-tight text-neutral-950 font-normal leading-tight ${
-            isShortLandscape
+          className={`tracking-tight text-neutral-950 font-normal leading-tight ${isShortLandscape
               ? 'text-lg sm:text-xl mt-0.5'
               : isPortrait
-              ? 'text-2xl sm:text-3xl mt-0.5'
-              : 'text-3xl sm:text-4xl lg:text-[2.65rem] mt-1'
-          }`}
+                ? 'text-2xl sm:text-3xl mt-0.5'
+                : 'text-3xl sm:text-4xl lg:text-[2.65rem] mt-1'
+            }`}
           style={{ fontFamily: '"Cormorant Garamond", "Cinzel", Georgia, serif' }}
         >
           Dev <span className="italic font-light text-[#b8860b] px-0.5 sm:px-1.5">&amp;</span> Suchismita
@@ -133,17 +131,14 @@ export const AlbumShowcase: React.FC<AlbumShowcaseProps> = ({
       >
         <div className="w-full max-w-7xl flex flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-8">
           {albums.map((album) => (
-            <article
+            <a
               key={album.id}
-              onClick={() => onSelectAlbum(album.id)}
-              className="group flex flex-col items-center text-center cursor-pointer transition-all duration-500 ease-out focus:outline-none"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  onSelectAlbum(album.id);
-                }
+              href={`/${album.id}`}
+              onClick={(e) => {
+                e.preventDefault();
+                onSelectAlbum(album.id);
               }}
+              className="group flex flex-col items-center text-center cursor-pointer transition-all duration-500 ease-out focus:outline-none no-underline"
               style={{ width: `${dimensions.bookWidth}px` }}
             >
               {/* 3D Photobook Cover */}
@@ -156,16 +151,14 @@ export const AlbumShowcase: React.FC<AlbumShowcaseProps> = ({
 
               {/* Album Metadata & Action Button */}
               <div
-                className={`flex flex-col items-center w-full transition-all duration-300 ${
-                  isShortLandscape ? 'mt-2' : 'mt-3 lg:mt-4'
-                }`}
+                className={`flex flex-col items-center w-full transition-all duration-300 ${isShortLandscape ? 'mt-2' : 'mt-3 lg:mt-4'
+                  }`}
               >
                 <h2
-                  className={`font-serif font-bold text-neutral-900 group-hover:text-black transition-colors truncate max-w-full ${
-                    isShortLandscape
+                  className={`font-serif font-bold text-neutral-900 group-hover:text-black transition-colors truncate max-w-full ${isShortLandscape
                       ? 'text-sm mt-0.5'
                       : 'text-base lg:text-lg mt-1'
-                  }`}
+                    }`}
                 >
                   {album.title}
                 </h2>
@@ -174,34 +167,27 @@ export const AlbumShowcase: React.FC<AlbumShowcaseProps> = ({
                   {album.date}
                 </p>
 
-                {/* Open Button */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelectAlbum(album.id);
-                  }}
-                  className={`rounded-full transition-all duration-300 font-medium active:scale-95 flex items-center justify-center gap-1 shadow-xs border ${
-                    isShortLandscape
+                {/* Open Button Badge */}
+                <div
+                  className={`rounded-full transition-all duration-300 font-medium active:scale-95 flex items-center justify-center gap-1 shadow-xs border ${isShortLandscape
                       ? 'mt-1.5 px-3 py-1 text-[11px] bg-white/90 group-hover:bg-[#b8860b] group-hover:text-white border-neutral-200'
                       : 'mt-2.5 px-4 py-1.5 text-xs bg-white/90 hover:bg-[#b8860b] group-hover:bg-[#b8860b] text-neutral-800 group-hover:text-white hover:text-white border-neutral-300/80 group-hover:border-[#b8860b] shadow-xs'
-                  }`}
+                    }`}
                 >
                   <BookOpen className="w-3.5 h-3.5" />
                   <span>Open Album</span>
                   <ChevronRight className="w-3.5 h-3.5 ml-0.5 transition-transform group-hover:translate-x-0.5" />
-                </button>
+                </div>
               </div>
-            </article>
+            </a>
           ))}
         </div>
       </section>
 
       {/* Footer Credit */}
       <footer
-        className={`w-full text-center font-sans shrink-0 z-10 ${
-          isShortLandscape ? 'py-1 text-[10px]' : 'py-2.5 sm:py-3 text-[11px] sm:text-xs'
-        }`}
+        className={`w-full text-center font-sans shrink-0 z-10 ${isShortLandscape ? 'py-1 text-[10px]' : 'py-2.5 sm:py-3 text-[11px] sm:text-xs'
+          }`}
       >
         <a
           href="https://www.mindtrixmedia.com/"
