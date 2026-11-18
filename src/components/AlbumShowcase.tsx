@@ -4,7 +4,7 @@ import { AlbumData } from '@/data/albums';
 import { AlbumBookCover } from './AlbumBookCover';
 import { RenewalCountdown } from './RenewalCountdown';
 import { RotateScreenOverlay } from './RotateScreenOverlay';
-import { BookOpen, ChevronRight } from 'lucide-react';
+import { BookOpen, ChevronRight, Share2 } from 'lucide-react';
 
 interface AlbumShowcaseProps {
   albums: AlbumData[];
@@ -40,7 +40,17 @@ export const AlbumShowcase: React.FC<AlbumShowcaseProps> = ({
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [albums, onSelectAlbum]);
 
-  // 3. Screen classification
+  // ponytail: minimal 1-line native share with clipboard fallback, no boilerplate state
+  const handleShare = () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      navigator.share({ title: 'Dev & Suchismita · Wedding Digital Album', url });
+    } else {
+      navigator.clipboard.writeText(url);
+    }
+  };
+
+  // 4. Screen classification
   const isPortrait = viewport.height > viewport.width && viewport.width < 768;
   const isShortLandscape = !isPortrait && viewport.height < 520;
 
@@ -79,6 +89,19 @@ export const AlbumShowcase: React.FC<AlbumShowcaseProps> = ({
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-b from-[#b8860b]/5 to-transparent rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-t from-[#2d0402]/5 to-transparent rounded-full blur-3xl pointer-events-none" />
 
+      {/* Top Floating Share Button — Conveniently placed on top-left */}
+      <div className="absolute top-2.5 sm:top-4 left-3 sm:left-6 z-30 pointer-events-auto">
+        <button
+          onClick={handleShare}
+          title="Share Album Collection"
+          aria-label="Share Wedding Album Collection"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 hover:bg-white text-neutral-800 hover:text-black border border-neutral-200/90 shadow-xs backdrop-blur-md transition-all active:scale-95 text-xs font-semibold hover:border-[#b8860b]"
+        >
+          <Share2 className="w-3.5 h-3.5 text-[#b8860b]" />
+          <span>Share Album</span>
+        </button>
+      </div>
+
       {/* Top Floating Renewal Countdown — Discreet in top-right corner, zero center clutter */}
       <div className="absolute top-2.5 sm:top-4 right-3 sm:right-6 z-30 pointer-events-auto">
         <RenewalCountdown />
@@ -104,10 +127,10 @@ export const AlbumShowcase: React.FC<AlbumShowcaseProps> = ({
         {/* Main Couple Names */}
         <h1
           className={`tracking-tight text-neutral-950 font-normal leading-tight ${isShortLandscape
-              ? 'text-lg sm:text-xl mt-0.5'
-              : isPortrait
-                ? 'text-2xl sm:text-3xl mt-0.5'
-                : 'text-3xl sm:text-4xl lg:text-[2.65rem] mt-1'
+            ? 'text-lg sm:text-xl mt-0.5'
+            : isPortrait
+              ? 'text-2xl sm:text-3xl mt-0.5'
+              : 'text-3xl sm:text-4xl lg:text-[2.65rem] mt-1'
             }`}
           style={{ fontFamily: '"Cormorant Garamond", "Cinzel", Georgia, serif' }}
         >
@@ -156,8 +179,8 @@ export const AlbumShowcase: React.FC<AlbumShowcaseProps> = ({
               >
                 <h2
                   className={`font-serif font-bold text-neutral-900 group-hover:text-black transition-colors truncate max-w-full ${isShortLandscape
-                      ? 'text-sm mt-0.5'
-                      : 'text-base lg:text-lg mt-1'
+                    ? 'text-sm mt-0.5'
+                    : 'text-base lg:text-lg mt-1'
                     }`}
                 >
                   {album.title}
@@ -170,8 +193,8 @@ export const AlbumShowcase: React.FC<AlbumShowcaseProps> = ({
                 {/* Open Button Badge */}
                 <div
                   className={`rounded-full transition-all duration-300 font-medium active:scale-95 flex items-center justify-center gap-1 shadow-xs border ${isShortLandscape
-                      ? 'mt-1.5 px-3 py-1 text-[11px] bg-white/90 group-hover:bg-[#b8860b] group-hover:text-white border-neutral-200'
-                      : 'mt-2.5 px-4 py-1.5 text-xs bg-white/90 hover:bg-[#b8860b] group-hover:bg-[#b8860b] text-neutral-800 group-hover:text-white hover:text-white border-neutral-300/80 group-hover:border-[#b8860b] shadow-xs'
+                    ? 'mt-1.5 px-3 py-1 text-[11px] bg-white/90 group-hover:bg-[#b8860b] group-hover:text-white border-neutral-200'
+                    : 'mt-2.5 px-4 py-1.5 text-xs bg-white/90 hover:bg-[#b8860b] group-hover:bg-[#b8860b] text-neutral-800 group-hover:text-white hover:text-white border-neutral-300/80 group-hover:border-[#b8860b] shadow-xs'
                     }`}
                 >
                   <BookOpen className="w-3.5 h-3.5" />
