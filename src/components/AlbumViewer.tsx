@@ -642,7 +642,6 @@ export const AlbumViewer: React.FC<AlbumViewerProps> = ({ config, onBackToAlbums
       pageNumber: leaf.pageNumber,
       label: leaf.label,
       previewSrc: leaf.previewSrc,
-      fallbackSrc: leaf.fallbackSrc || leaf.originalItem?.fallbackSrc,
     }));
   }, [leaves]);
 

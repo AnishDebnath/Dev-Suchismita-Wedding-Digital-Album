@@ -12,7 +12,6 @@ export interface ThumbnailItem {
   pageNumber?: number;
   label: string;
   previewSrc?: string;
-  fallbackSrc?: string;
 }
 
 interface ThumbnailStripProps {
@@ -83,12 +82,6 @@ export const ThumbnailStrip: React.FC<ThumbnailStripProps> = ({
     }
     // Content images: show ONLY page number!
     return `Page ${item.pageNumber}`;
-  };
-
-  // ponytail: optimize Cloudinary preview URLs for ultra-fast lightweight thumbnails (~20-25KB each)
-  const toThumbnailUrl = (url?: string) => {
-    if (!url || !url.includes('/image/upload/')) return url;
-    return url.replace(/\/image\/upload\/(?:.*\/)?(?=v\d+)/, '/image/upload/w_360,c_scale,f_auto,q_auto/');
   };
 
   return (
@@ -205,12 +198,7 @@ export const ThumbnailStrip: React.FC<ThumbnailStripProps> = ({
                         /* 3. Continuous Spread Left Half (Page Image) */
                         <div className="w-full h-full relative overflow-hidden bg-neutral-900">
                           <img
-                            src={toThumbnailUrl(item.previewSrc)}
-                            onError={(e) => {
-                              if (item.fallbackSrc && e.currentTarget.src !== item.fallbackSrc && !e.currentTarget.src.endsWith(item.fallbackSrc)) {
-                                e.currentTarget.src = item.fallbackSrc;
-                              }
-                            }}
+                            src={item.previewSrc}
                             alt={`Page ${item.pageNumber}`}
                             className="absolute top-0 bottom-0 max-w-none h-full object-cover select-none pointer-events-none group-hover:scale-105 transition-transform duration-500"
                             style={{
@@ -225,12 +213,7 @@ export const ThumbnailStrip: React.FC<ThumbnailStripProps> = ({
                         /* 4. Continuous Spread Right Half (Page Image) */
                         <div className="w-full h-full relative overflow-hidden bg-neutral-900">
                           <img
-                            src={toThumbnailUrl(item.previewSrc)}
-                            onError={(e) => {
-                              if (item.fallbackSrc && e.currentTarget.src !== item.fallbackSrc && !e.currentTarget.src.endsWith(item.fallbackSrc)) {
-                                e.currentTarget.src = item.fallbackSrc;
-                              }
-                            }}
+                            src={item.previewSrc}
                             alt={`Page ${item.pageNumber}`}
                             className="absolute top-0 bottom-0 max-w-none h-full object-cover select-none pointer-events-none group-hover:scale-105 transition-transform duration-500"
                             style={{
@@ -246,12 +229,7 @@ export const ThumbnailStrip: React.FC<ThumbnailStripProps> = ({
                         <div className="w-full h-full relative overflow-hidden bg-neutral-900">
                           {item.previewSrc ? (
                             <img
-                              src={toThumbnailUrl(item.previewSrc)}
-                              onError={(e) => {
-                                if (item.fallbackSrc && e.currentTarget.src !== item.fallbackSrc && !e.currentTarget.src.endsWith(item.fallbackSrc)) {
-                                  e.currentTarget.src = item.fallbackSrc;
-                                }
-                              }}
+                              src={item.previewSrc}
                               alt={displayName}
                               className="w-full h-full object-cover select-none pointer-events-none group-hover:scale-105 transition-transform duration-500"
                               style={{ aspectRatio: '3 / 2' }}

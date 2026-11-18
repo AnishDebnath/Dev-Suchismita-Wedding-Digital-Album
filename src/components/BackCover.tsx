@@ -7,10 +7,10 @@ interface BackCoverProps {
 
 export const BackCover: React.FC<BackCoverProps> = ({ config }) => {
   const backItem = config.items.find(i => i.type === 'cover-back');
-  const coverImage = backItem?.src || backItem?.fallbackSrc || '';
+  const coverImage = backItem?.src || '';
 
   return (
-    <div 
+    <div
       className="relative w-full h-full text-[#ede8de] overflow-hidden select-none cursor-pointer group"
       data-density="hard"
     >
@@ -58,14 +58,8 @@ export const BackCover: React.FC<BackCoverProps> = ({ config }) => {
 
         {/* Pure, Clean, Unfiltered Back Cover Image — No filters, no dark overlays, no text, 3:2 ratio */}
         <div className="absolute inset-0 z-0 flex items-center justify-center">
-          <img 
+          <img
             src={coverImage}
-            data-fallback={backItem?.fallbackSrc}
-            onError={(e) => {
-              if (backItem?.fallbackSrc && e.currentTarget.src !== backItem.fallbackSrc && !e.currentTarget.src.endsWith(backItem.fallbackSrc)) {
-                e.currentTarget.src = backItem.fallbackSrc;
-              }
-            }}
             alt="Back cover — Dev & Suchismita Wedding Digital Album"
             className="w-full h-full object-cover"
             style={{ aspectRatio: '3 / 2' }}

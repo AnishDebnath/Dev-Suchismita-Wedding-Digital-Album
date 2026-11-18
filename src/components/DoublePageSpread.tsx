@@ -12,7 +12,7 @@ export const DoublePageSpreadLeaf: React.FC<DoublePageSpreadLeafProps> = ({
   isLeft,
   pageNumber,
 }) => {
-  const imageSrc = item.src || item.fallbackSrc || '';
+  const imageSrc = item.src || '';
 
   return (
     <div 
@@ -41,12 +41,6 @@ export const DoublePageSpreadLeaf: React.FC<DoublePageSpreadLeafProps> = ({
       >
         <img
           src={imageSrc}
-          data-fallback={item.fallbackSrc}
-          onError={(e) => {
-            if (item.fallbackSrc && e.currentTarget.src !== item.fallbackSrc && !e.currentTarget.src.endsWith(item.fallbackSrc)) {
-              e.currentTarget.src = item.fallbackSrc;
-            }
-          }}
           alt={item.title || (pageNumber ? `Album spread ${pageNumber} — Dev & Suchismita Wedding` : 'Album panoramic spread')}
           className="w-full h-full object-cover select-none pointer-events-none brightness-[0.98] contrast-[1.03]"
           loading="eager"

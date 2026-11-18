@@ -10,7 +10,6 @@ export interface CompiledLeaf {
   density: 'hard' | 'soft';
   label: string;
   previewSrc?: string;
-  fallbackSrc?: string;
 }
 
 export function compileAlbumLeaves(config: AlbumConfig): CompiledLeaf[] {
@@ -29,7 +28,6 @@ export function compileAlbumLeaves(config: AlbumConfig): CompiledLeaf[] {
     density: 'hard',
     label: 'Front Cover',
     previewSrc: frontCoverItem?.src || '',
-    fallbackSrc: frontCoverItem?.fallbackSrc,
   });
 
   // 2. Interior Items
@@ -71,7 +69,6 @@ export function compileAlbumLeaves(config: AlbumConfig): CompiledLeaf[] {
       density: 'soft',
       label: firstItem.title || 'Page 01',
       previewSrc: firstItem.src,
-      fallbackSrc: firstItem.fallbackSrc,
     });
     isNextLeft = true;
   }
@@ -111,7 +108,6 @@ export function compileAlbumLeaves(config: AlbumConfig): CompiledLeaf[] {
         density: 'soft',
         label: `${item.title || 'Panoramic Spread'} (Left)`,
         previewSrc: item.src,
-        fallbackSrc: item.fallbackSrc,
       });
 
       // Continuous 3:1 Spread: Right Leaf
@@ -125,7 +121,6 @@ export function compileAlbumLeaves(config: AlbumConfig): CompiledLeaf[] {
         density: 'soft',
         label: `${item.title || 'Panoramic Spread'} (Right)`,
         previewSrc: item.src,
-        fallbackSrc: item.fallbackSrc,
       });
 
       isNextLeft = true;
@@ -141,7 +136,6 @@ export function compileAlbumLeaves(config: AlbumConfig): CompiledLeaf[] {
         density: 'soft',
         label: item.title || `Page ${String(num).padStart(2, '0')}`,
         previewSrc: item.src,
-        fallbackSrc: item.fallbackSrc,
       });
       isNextLeft = !isNextLeft;
     }
@@ -234,7 +228,6 @@ export function compileAlbumLeaves(config: AlbumConfig): CompiledLeaf[] {
     density: 'hard',
     label: 'Back Cover',
     previewSrc: finalBackCoverItem?.src || '',
-    fallbackSrc: finalBackCoverItem?.fallbackSrc,
   });
 
   return leaves;

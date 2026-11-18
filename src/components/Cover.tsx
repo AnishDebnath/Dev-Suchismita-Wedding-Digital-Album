@@ -7,7 +7,7 @@ interface CoverProps {
 
 export const Cover: React.FC<CoverProps> = ({ config }) => {
   const frontCoverItem = config.items.find(i => i.type === 'cover');
-  const coverImage = frontCoverItem?.src || frontCoverItem?.fallbackSrc || '';
+  const coverImage = frontCoverItem?.src || '';
 
   return (
     <div 
@@ -61,12 +61,6 @@ export const Cover: React.FC<CoverProps> = ({ config }) => {
         <div className="absolute inset-0 z-0 flex items-center justify-center">
           <img 
             src={coverImage}
-            data-fallback={frontCoverItem?.fallbackSrc}
-            onError={(e) => {
-              if (frontCoverItem?.fallbackSrc && e.currentTarget.src !== frontCoverItem.fallbackSrc && !e.currentTarget.src.endsWith(frontCoverItem.fallbackSrc)) {
-                e.currentTarget.src = frontCoverItem.fallbackSrc;
-              }
-            }}
             alt="Front cover — Dev & Suchismita Wedding Digital Album"
             className="w-full h-full object-cover"
             style={{ aspectRatio: '3 / 2' }}

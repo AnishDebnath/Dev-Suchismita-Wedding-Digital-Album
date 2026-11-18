@@ -12,7 +12,7 @@ export const SinglePage: React.FC<SinglePageProps> = ({
   isLeft,
   pageNumber,
 }) => {
-  const imageSrc = item.src || item.fallbackSrc || '';
+  const imageSrc = item.src || '';
 
   return (
     <div 
@@ -28,12 +28,6 @@ export const SinglePage: React.FC<SinglePageProps> = ({
       <div className="absolute inset-0 overflow-hidden flex items-center justify-center">
         <img
           src={imageSrc}
-          data-fallback={item.fallbackSrc}
-          onError={(e) => {
-            if (item.fallbackSrc && e.currentTarget.src !== item.fallbackSrc && !e.currentTarget.src.endsWith(item.fallbackSrc)) {
-              e.currentTarget.src = item.fallbackSrc;
-            }
-          }}
           alt={item.title || (pageNumber ? `Album page ${pageNumber} — Dev & Suchismita Wedding` : 'Album photograph')}
           className="w-full h-full object-cover select-none pointer-events-none brightness-[0.98] contrast-[1.02] relative z-1"
           style={{ aspectRatio: '3 / 2' }}

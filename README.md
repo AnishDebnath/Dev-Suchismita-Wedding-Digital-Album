@@ -47,17 +47,13 @@ src/
 ├── main.tsx                   # React root: createRoot + StrictMode
 ├── App.tsx                    # App shell, mounts AlbumViewer
 ├── index.css                  # Global styles
-├── assets/                    # Album images: Cloudinary URLs via env, local copies as fallback
-│   ├── index.ts               # `assets.*` = Cloudinary URL only (`${VITE_CLOUDINARY_BASE_URL}/<public_id>`)
-│   ├── cloudinaryImages.ts    # Cloudinary public_id map (mindtrix-media, v1791649244)
-│   ├── front-cover.jpg        # Front cover image
-│   ├── back-cover.jpg         # Back cover image
-│   ├── background-music.mp3   # Looping background music (plays by default)
-│   └── page-01.jpg … page-24.jpg  # Interior pages, in book order
+├── assets/                    # Static assets: background-music.mp3, logos
 ├── components/
+│   ├── AlbumShowcase.tsx      # 3-Album collection volume showcase
+│   ├── AlbumBookCover.tsx     # 3D photobook hardcover component
 │   ├── AlbumViewer.tsx        # Core page-turning engine & viewport manager
 │   ├── Cover.tsx              # Luxury debossed gold foil front cover
-│   ├── BackCover.tsx          # Artisan gold-seal exterior back cover
+│   ├── BackCover.tsx          # Artisan exterior back cover
 │   ├── DoublePageSpread.tsx   # Synchronized two-page continuous panoramic spread
 │   ├── SinglePage.tsx         # Single photographic matte leaf
 │   ├── Flyleaf.tsx            # Mulberry silk archival endpaper
@@ -66,11 +62,13 @@ src/
 │   ├── ThumbnailStrip.tsx     # All spreads overview drawer
 │   └── RotateScreenOverlay.tsx # Portrait orientation hint overlay
 ├── data/
+│   ├── albums.ts              # 3 Album volumes and ImageKit image mappings
 │   └── album.config.ts        # Centralized album configuration
 ├── types/
 │   └── page-flip.d.ts         # StPageFlip module declarations
 └── utils/
     ├── audio.ts               # Web Audio API paper turnover sound synthesizer
+    ├── backgroundMusic.ts     # Looping background music manager
     ├── responsive.ts          # Viewport proportional scaling math
     └── albumCompiler.ts       # Leaf sequence compiler for StPageFlip
 ```
@@ -79,65 +77,30 @@ src/
 
 ## 🛠️ How to Customize the Album
 
-### 1. Replace Photographs
-Photos come from Cloudinary only. To swap or add a photo:
-1. Upload the image to your Cloudinary account.
-2. Open `src/assets/cloudinaryImages.ts`.
-3. Put the image's Cloudinary file name in the matching slot (`page-05`, `front-cover`, …).
-- Aspect ratio: 3:2 landscape (e.g. 3000 × 2000 px).
-- Background music stays local (`src/assets/background-music.mp3`).
+### 1. Cloud Image Hosting (ImageKit.io)
+All photos for the 3 albums (Pre-Wedding, Wedding Ceremony, Reception) are served directly from **ImageKit.io**.
 
-### 2. Edit `src/data/album.config.ts`
-Modify the couple's names, date, venue, photographer details, or reorder/add pages:
-
-```typescript
-import { assets } from '@/assets';
-
-export const albumConfig: AlbumConfig = {
-  coupleNames: "Dev & Suchismita",
-
-  items: [
-    // Front cover
-    {
-      id: 'cover-front',
-      type: 'cover',
-      src: assets.frontCover,
-    },
-    // Interior pages in book order
-    { id: 'page-01', type: 'single', src: assets.page01 },
-    { id: 'page-02', type: 'single', src: assets.page02 },
-    { id: 'page-03', type: 'single', src: assets.page03 },
-    // Add as many single pages as you wish...
-    {
-      id: 'cover-back',
-      type: 'cover-back',
-      src: assets.backCover,
-    },
-  ]
-};
-```
+1. Set your ImageKit URL endpoint in `.env`:
+   ```env
+   VITE_IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/<your-imagekit-id>
+   ```
+2. Upload your album photos under the folder:
+   `Dev-Suchismita-Wedding-Digital-Album/<Album Folder>/<filename>.jpg`
+   matching the filenames defined in `src/data/albums.ts`.
 
 ---
 
 ## 🚀 Development & Deployment
 
-### How the Photos Load
-All photos (front cover, back cover, page-01 … page-24) are stored on **Cloudinary** (online image hosting). The website downloads them from there — not from the project folder.
-
-3 things make it work:
-1. **Your Cloudinary link** lives in a file called `.env` (one line: `VITE_CLOUDINARY_BASE_URL=...`). This file stays private on your computer.
-2. **Photo names** are listed in `src/assets/cloudinaryImages.ts`. Each line pairs a page (`page-01`) with its Cloudinary file name (`page-01_xxxxx.jpg`). Copy the file name from Cloudinary's website after uploading.
-3. **Missing name = blank page.** Every one of the 26 keys must have a Cloudinary file name. Right now only `page-22` is filled — add the other 25.
-
 ### Run Locally
 ```bash
 npm install
-cp .env.example .env   # then paste your Cloudinary link into .env
+cp .env.example .env   # then paste your ImageKit link into .env
 npm run dev
 ```
 
 ### Deploy on Vercel
-`.env` is NOT uploaded automatically. Add the same variable in Vercel: Project → Settings → Environment Variables → add `VITE_CLOUDINARY_BASE_URL` → Redeploy.
+`.env` is NOT uploaded automatically. Add the environment variable in Vercel: Project → Settings → Environment Variables → add `VITE_IMAGEKIT_URL_ENDPOINT` → Redeploy.
 
 ### Build for Production
 ```bash

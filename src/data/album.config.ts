@@ -41,7 +41,6 @@ export interface AlbumItemConfig {
   id: string;
   type: AlbumPageType;
   src?: string;
-  fallbackSrc?: string;
   title?: string;
   subtitle?: string;
   caption?: string;
